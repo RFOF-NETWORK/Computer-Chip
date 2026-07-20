@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Telekommunikation & Bit-Metrik</title>
+    <style>
+        body { background: #0d1117; color: #c9d1d9; font-family: 'Courier New', monospace; padding: 5%; }
+        .box { background: #161b22; padding: 25px; border-radius: 8px; border: 1px solid #30363d; max-width: 750px; margin: auto; }
+        input, select, button { background: #21262d; color: #fff; border: 1px solid #30363d; padding: 12px; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 15px; font-family: monospace; }
+        button { background: #238636; cursor: pointer; font-weight: bold; border: none; }
+        button:hover { background: #2ea043; }
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .grid-item { background: #000; padding: 15px; border-radius: 4px; border: 1px solid #30363d; }
+        .grid-item span { color: #58a6ff; font-weight: bold; display: block; margin-bottom: 5px; }
+        .back { color: #58a6ff; text-decoration: none; display: inline-block; margin-bottom: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <a class="back" href="../index.html">🏠 Zurück zum Hauptmenü</a>
+        <h2>Telekommunikations-Datenkonverter</h2>
+        <p>Mathematische Analyse von Bit- und Byte-Strukturen im RAM und Übertragungskanal.</p>
+        
+        <label>Datenmenge eingeben:</label>
+        <input type="number" id="dataAmount" value="1" min="0" step="any">
+        
+        <label>Ursprungseinheit wählen:</label>
+        <select id="unitInput">
+            <option value="b">Bits (b)</option>
+            <option value="B">Bytes (B)</option>
+            <option value="Kb">Kilobits (Kb - Telekommunikation)</option>
+            <option value="KB">Kilobytes (KB - Speicher)</option>
+            <option value="Gb">Gigabits (Gb - Datenstrom)</option>
+            <option value="GB">Gigabytes (GB - Festplatte/Tonnen)</option>
+        </select>
+        
+        <button onclick="calculateDataStructures()">Datenstruktur zerlegen</button>
+        
+        <div class="result-grid">
+            <div class="grid-item"><span id="lblBits">Bits (Basis):</span><div id="outBits">0</div></div>
+            <div class="grid-item"><span id="lblBytes">Bytes (8-Bit):</span><div id="outBytes">0</div></div>
+            <div class="grid-item"><span id="lblKilo">Kilo-Ebene:</span><div id="outKilo">0</div></div>
+            <div class="grid-item"><span id="lblGiga">Giga-Ebene:</span><div id="outGiga">0</div></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateDataStructures() {
+            const val = parseFloat(document.getElementById('dataAmount').value);
+            const unit = document.getElementById('unitInput').value;
+            let bits = 0;
+
+            // Normierung auf die absolute atomare Basis: Bits
+            switch(unit) {
+                case 'b':  bits = val; break;
+                case 'B':  bits = val * 8; break;
+                case 'Kb': bits = val * 1000; break;
+                case 'KB': bits = val * 8 * 1024; break;
+                case 'Gb': bits = val * 1000 * 1000 * 1000; break;
+                case 'GB': bits = val * 8 * 1024 * 1024 * 1024; break;
+            }
+
+            const bytes = bits / 8;
+            
+            // Telekommunikation rechnet in Basis 10 (1000), Speicherarchitektur in Basis 2 (1024)
+            document.getElementById('outBits').innerText = bits.toLocaleString() + " b";
+            document.getElementById('outBytes').innerText = bytes.toLocaleString() + " B";
+            document.getElementById('outKilo').innerText = `Telekom: ${(bits/1000).toLocaleString()} Kb\nSpeicher: ${(bytes/1024).toLocaleString()} KB`;
+            document.getElementById('outGiga').innerText = `Telekom: ${(bits/1000000000).toFixed(6)} Gb\nSpeicher: ${(bytes/(1024*1024*1024)).toFixed(6)} GB`;
+        }
+    </script>
+</body>
+</html>
